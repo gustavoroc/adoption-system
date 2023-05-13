@@ -1,0 +1,30 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+env/
+
+# Compiled Python files
+*.pyo
+
+# Logs
+*.log
+
+# Build directory
+build/
+
+# Distribution directory
+dist/
+
+# Egg metadata
+*.egg-info/
+
+# Cache directories
+__pycache__/
+.cache/
+
+# Other
+*.swp
+*~
