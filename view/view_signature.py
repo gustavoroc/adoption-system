@@ -54,4 +54,9 @@ class IViewSignature(ABC):
     @abstractmethod
     def sucess_message(message: str) -> str:
         ...
+
+    @abstractmethod
+    def get_vaccine() -> str:
+        ...
+        
     
