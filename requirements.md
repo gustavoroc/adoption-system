@@ -1,0 +1,8 @@
+- 1) Registrar um Adotante ✔️
+- 2) Registrar um Doador ✔️
+- 3) Registrar um Pet ✔️
+- 4) Registrar uma Doação ✔️
+- 5) Registrar uma Adoção ✔️
+- 6) Vacinar o animal ✔️
+- 7) Relatórios ❌
+- 8) Implementar a View Concreta ❌

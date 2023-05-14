@@ -2,7 +2,9 @@ from datetime import date
 from models.animal.animal import Animal
 from models.person.adopter import Adopter
 from models.person.donor import Donor
+from models.registers.adoption_register import AdoptionRegister
 from models.registers.donation_register import DonationRegister
+from models.vaccine.vaccine import Vaccine
 from repository.adoption_repo import AdoptionRegisterRepository
 from repository.animal_repo import AnimalRepository
 from repository.donation_repo import DonationRegisterRepository
@@ -23,7 +25,10 @@ class Controller:
             '3': lambda: self.donor_relatory(),
             '4': lambda: self.adopter_relatory(),
             '5': lambda: self.pet_relatory(),
-            '6': lambda: self.register_pet_for_donation()
+            '6': lambda: self.register_pet_for_donation(),
+            '7': lambda: self.register_donation(),
+            '8': lambda: self.register_adoption(),
+            '9': lambda: self.vaccine_animal(),
         }
 
     def start_view(self):
@@ -78,8 +83,50 @@ class Controller:
             print(f"Ocorreu um erro: {e}")
     
     def register_adoption(self):
-        ...
-    
+        try:
+            cpf = self.__viewService.get_person_cpf_information()
+            chip_number = self.__viewService.get_animal_chip_number()
+            animal = self.__animalRepository.get_animal_by_chip(chip_number)
+            adopter = self.__personRepository.get_person_by_cpf(cpf)
+
+            if (adopter.has_other_pets()):
+                raise Exception("Não é possível adotar um animal, pois o adotante já possui outros animais.")
+            
+            if (adopter.role() == "Doador"):
+                raise Exception("Não é possível adotar um animal, pois o adotante é um doador.")
+            
+            if(adopter.home_type() == "Apartamento" and animal.size != "pequeno"):
+                raise Exception("Não é possível adotar um cachorro, pois o adotante mora em apartamento.")
+            
+            if(not animal.vaccine_history.check_vaccines()):
+                raise Exception("Não é possível adotar um animal, pois o animal não possui todas as vacinas obrigatórias.")
+            
+            if (not adopter.check_adult()):
+                raise Exception("Não é possível adotar um animal, pois o adotante não é maior de idade.")
+
+            adoption = AdoptionRegister(date.today(), animal, adopter)
+            adoption.signed = True
+
+            self.__adoptionRepository.create_adoption(adoption)
+            self.__viewService.sucess_message(f'Animal de chip {animal.chip_number} adotado com sucesso pelo adotante de cpf: {adopter.cpf}.')
+        except Exception as e:
+            print(f"Ocorreu um erro: {e}")
+
+    def vaccine_animal(self):
+        try:
+            chip_id = self.__viewService.get_animal_chip_number()
+            vaccine_name = self.__viewService.get_vaccine()
+
+            animal = self.__animalRepository.get_animal_by_chip(chip_id)
+            vaccine = Vaccine(vaccine_name, date.today())
+            animal.vaccine_history.add_vaccine(vaccine)
+
+            self.__animalRepository.update_animal(animal.chip_number, animal)
+            self.__viewService.sucess_message(f"Vacina {vaccine.name} adicionada ao animal de chip {animal.chip_number} com sucesso.")
+        except Exception as e:
+            print(f"Ocorreu um erro: {e}")
+
+
     def donor_relatory():
         # Deve retornar um relatório de doadores;
         ...

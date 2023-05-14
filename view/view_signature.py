@@ -17,7 +17,6 @@ class IViewSignature(ABC):
         #   birth_date: '...'
         #   address: '...'
         # }
-
     
     @abstractmethod
     def get_adopter_information() -> Dict[str, str]:
@@ -55,3 +54,4 @@ class IViewSignature(ABC):
     @abstractmethod
     def sucess_message(message: str) -> str:
         ...
+    
