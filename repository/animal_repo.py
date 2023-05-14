@@ -17,6 +17,14 @@ class AnimalRepository:
     def get_all_animals(self) -> List[Animal]:
         return self.__animals
 
+    def get_available_animals(self) -> List[Animal]:
+        available_animals = []
+        for animal in self.__animals:
+            if not animal.__isAdopted:
+                available_animals.append(animal)
+        return available_animals
+                
+    
     def get_animal_by_chip(self, chip_number: str) -> Optional[Animal]:
         if not isinstance(chip_number, str):
             raise ValueError("Chip number must be a string.")

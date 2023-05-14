@@ -1,5 +1,9 @@
 from abc import ABC, abstractmethod
-from typing import Dict
+from typing import Dict, List
+from models.animal.animal import Animal
+from models.registers.adoption_register import AdoptionRegister
+
+from models.registers.donation_register import DonationRegister
 
 
 class IViewSignature(ABC):
@@ -49,6 +53,18 @@ class IViewSignature(ABC):
 
     @abstractmethod
     def get_reason_donation() -> str:
+        ...
+        
+    @abstractmethod
+    def generate_donation_relatory(donations : List[DonationRegister]) -> None:
+        ...
+    
+    @abstractmethod
+    def generate_adoption_relatory(adoptions : List[AdoptionRegister]) -> None:
+        ...
+    
+    @abstractmethod
+    def generate_animal_relatory(animals : List[Animal]) -> None:
         ...
     
     @abstractmethod

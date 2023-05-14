@@ -106,7 +106,9 @@ class Controller:
 
             adoption = AdoptionRegister(date.today(), animal, adopter)
             adoption.signed = True
+            animal.isAdopted = True
 
+            self.__animalRepository.update_animal(animal.chip_number, animal)
             self.__adoptionRepository.create_adoption(adoption)
             self.__viewService.sucess_message(f'Animal de chip {animal.chip_number} adotado com sucesso pelo adotante de cpf: {adopter.cpf}.')
         except Exception as e:
@@ -127,14 +129,27 @@ class Controller:
             print(f"Ocorreu um erro: {e}")
 
 
-    def donor_relatory():
-        # Deve retornar um relatório de doadores;
-        ...
+    def donor_relatory(self):
+        try:
+            donations = self.__donationRepository.read_all_donations()
+            self.__viewService.generate_donation_relatory(donations)
+            self.__viewService.sucess_message(f"{len(donations)} de doações foram feitas")
+        except Exception as e:
+            print(f"Ocorreu um erro: {e}")
 
-    def adopter_relatory():
-        # Deve retornar um relatório de adotantes;
-        ...
+    def adopter_relatory(self):
+        try: 
+            adoptions = self.__adoptionRepository.read_all_adoptions()
+            self.__viewService.generate_adoption_relatory(adoptions)
+            self.__viewService.sucess_message(f"{len(adoptions)} de adoções foram feitas")
+        except Exception as e:
+            print(f"Ocorreu um erro: {e}")
 
-    def pet_relatory():
-        # Deve retornar um relatório de pets;
-        ...
+    def available_pets_relatory(self):
+        try:
+            animals = self.__animalRepository.get_available_animals()
+            self.__viewService.generate_animal_relatory(animals)
+            self.__viewService.sucess_message(f"Há {len(animals)} animais disponíveis para adoação")
+        except Exception as e:
+            print(f"Ocorreu um erro: {e}")
+        
