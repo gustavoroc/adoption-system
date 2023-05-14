@@ -30,3 +30,28 @@ class IViewSignature(ABC):
         #   home_type: '...'
         #   has_other_pets: '...'
         # }
+        
+    @abstractmethod
+    def get_animal_information() -> Dict[str, str]:
+        ...
+        # {
+        #   chip_number: '...'
+        #   name: '...'
+        #   breed: '...'
+        # }
+        
+    @abstractmethod
+    def get_person_cpf_information() -> str:
+        ...
+    
+    @abstractmethod
+    def get_animal_chip_number() -> str:
+        ...
+
+    @abstractmethod
+    def get_reason_donation() -> str:
+        ...
+    
+    @abstractmethod
+    def sucess_message(message: str) -> str:
+        ...

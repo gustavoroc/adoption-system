@@ -13,3 +13,6 @@ class Dog(Animal):
     @size.setter
     def size(self, value):
         self.__size = value
+
+    def animal_type():
+        return "Cachorro"

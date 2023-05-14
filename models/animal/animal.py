@@ -1,14 +1,13 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from models.vaccine.vaccine_history import VaccineHistory
 
 class Animal(ABC):
-    def __init__(self, chip_number: str, name: str, breed: str, size: str):
+    def __init__(self, chip_number: str, name: str, breed: str):
         self.__chip_number = chip_number
         self.__name = name
         self.__breed = breed
-        self.__size = size
         self.__isAdopted = False
-        self.__vaccine_history = VaccineHistory()
+        self.__vaccine_history = VaccineHistory(self)
 
     @property
     def chip_number(self):
@@ -35,14 +34,6 @@ class Animal(ABC):
         self.__breed = value
 
     @property
-    def size(self):
-        return self.__size
-
-    @size.setter
-    def size(self, value):
-        self.__size = value
-
-    @property
     def vaccine_history(self):
         return self.__vaccine_history
     
@@ -56,4 +47,8 @@ class Animal(ABC):
             raise ValueError('isAdopted must be a boolean value')
 
         self.__isAdopted = value
+        
+    @abstractmethod
+    def animal_type():
+        ...
     
