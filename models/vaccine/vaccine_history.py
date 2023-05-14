@@ -1,4 +1,3 @@
-from typing import List
 from datetime import date
 
 from models.animal.animal import Animal

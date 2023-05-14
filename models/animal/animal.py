@@ -1,6 +1,7 @@
+from abc import ABC
 from models.vaccine.vaccine_history import VaccineHistory
 
-class Animal:
+class Animal(ABC):
     def __init__(self, chip_number: str, name: str, breed: str, size: str):
         self.__chip_number = chip_number
         self.__name = name
