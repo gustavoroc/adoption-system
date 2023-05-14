@@ -9,7 +9,7 @@ from models.registers.donation_register import DonationRegister
 class IViewSignature(ABC):
 
     @abstractmethod    
-    def start():
+    def start() -> str:
         ...
 
     @abstractmethod    

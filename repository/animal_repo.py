@@ -20,7 +20,7 @@ class AnimalRepository:
     def get_available_animals(self) -> List[Animal]:
         available_animals = []
         for animal in self.__animals:
-            if not animal.__isAdopted:
+            if not animal.isAdopted:
                 available_animals.append(animal)
         return available_animals
                 

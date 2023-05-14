@@ -4,5 +4,5 @@
 - 4) Registrar uma Doação ✔️
 - 5) Registrar uma Adoção ✔️
 - 6) Vacinar o animal ✔️
-- 7) Relatórios ❌
-- 8) Implementar a View Concreta ❌
+- 7) Relatórios ✔️
+- 8) Implementar a View Concreta ✔️

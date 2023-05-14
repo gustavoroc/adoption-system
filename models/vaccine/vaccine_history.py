@@ -1,14 +1,9 @@
 from datetime import date
 
-from models.animal.animal import Animal
 from models.vaccine.vaccine import Vaccine
 
-
 class VaccineHistory:
-    def __init__(self, animal: Animal):
-        if not isinstance(animal, Animal):
-            raise ValueError('animal must be a Animal')
-
+    def __init__(self, animal):
         self.__date_of_creation = date.today()
         self.__date_of_atualization = date.today()
         self.__animal = animal

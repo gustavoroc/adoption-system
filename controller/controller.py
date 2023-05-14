@@ -24,17 +24,21 @@ class Controller:
             '2': lambda: self.register_adopter(),
             '3': lambda: self.donor_relatory(),
             '4': lambda: self.adopter_relatory(),
-            '5': lambda: self.pet_relatory(),
+            '5': lambda: self.available_pets_relatory(),
             '6': lambda: self.register_pet_for_donation(),
             '7': lambda: self.register_donation(),
             '8': lambda: self.register_adoption(),
             '9': lambda: self.vaccine_animal(),
+            '0': lambda: self.exit()
         }
+
+    def exit(self):
+        return '00'
 
     def start_view(self):
         try:
             view_target_action = self.__viewService.start() 
-            self.viewCommand[view_target_action]()
+            return self.viewCommand[view_target_action]()
         except Exception as e:
             print(f"Ocorreu um erro: {str(e)}")
 
@@ -89,11 +93,11 @@ class Controller:
             animal = self.__animalRepository.get_animal_by_chip(chip_number)
             adopter = self.__personRepository.get_person_by_cpf(cpf)
 
-            if (adopter.has_other_pets()):
-                raise Exception("Não é possível adotar um animal, pois o adotante já possui outros animais.")
-            
             if (adopter.role() == "Doador"):
                 raise Exception("Não é possível adotar um animal, pois o adotante é um doador.")
+            
+            if (adopter.has_other_pets()):
+                raise Exception("Não é possível adotar um animal, pois o adotante já possui outros animais.")
             
             if(adopter.home_type() == "Apartamento" and animal.size != "pequeno"):
                 raise Exception("Não é possível adotar um cachorro, pois o adotante mora em apartamento.")
@@ -127,7 +131,6 @@ class Controller:
             self.__viewService.sucess_message(f"Vacina {vaccine.name} adicionada ao animal de chip {animal.chip_number} com sucesso.")
         except Exception as e:
             print(f"Ocorreu um erro: {e}")
-
 
     def donor_relatory(self):
         try:

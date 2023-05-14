@@ -48,7 +48,6 @@ class Animal(ABC):
 
         self.__isAdopted = value
         
-    @abstractmethod
     def animal_type():
         ...
     
