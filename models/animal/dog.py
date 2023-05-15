@@ -14,5 +14,5 @@ class Dog(Animal):
     def size(self, value):
         self.__size = value
 
-    def animal_type():
-        return "Cachorro"
+    def animal_type(self):
+        return "Dog"

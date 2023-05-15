@@ -5,7 +5,7 @@ from models.registers.donation_register import DonationRegister
 
 class DonationRegisterRepository:
     def __init__(self):
-        self.__donations = []
+        self.__donations: List[DonationRegister] = []
 
     def create_donation(self, donation: DonationRegister) -> bool:
         if not isinstance(donation, DonationRegister):
@@ -13,6 +13,11 @@ class DonationRegisterRepository:
 
         if not isinstance(donation.donation_date, date):
             raise TypeError("donation_date must be an instance of date")
+        
+        # check if the dog is already registered in the donations list
+        for donationOfTheArray in self.__donations:
+            if donationOfTheArray.donated_animal.chip_number == donation.donated_animal.chip_number:
+                raise TypeError("This dog is already registered in the donations list")
 
         self.__donations.append(donation)
         return True

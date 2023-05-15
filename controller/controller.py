@@ -1,5 +1,7 @@
 from datetime import date
 from models.animal.animal import Animal
+from models.animal.cat import Cat
+from models.animal.dog import Dog
 from models.person.adopter import Adopter
 from models.person.donor import Donor
 from models.registers.adoption_register import AdoptionRegister
@@ -63,9 +65,14 @@ class Controller:
     def register_pet_for_donation(self):
         try:
             animal_raw_data = self.__viewService.get_animal_information()
-            animal = Animal(animal_raw_data['chip_number'], animal_raw_data['name'], animal_raw_data['breed'])
+
+            if (animal_raw_data['animal_type'] == "cat"):
+               animal =  Cat(animal_raw_data['chip_number'], animal_raw_data['name'], animal_raw_data['breed'])
+            else:
+                animal = Dog(animal_raw_data['chip_number'], animal_raw_data['name'], animal_raw_data['breed'], animal_raw_data['size'])
+
             self.__animalRepository.create_animal(animal)
-            self.__viewService.sucess_message(f"{animal.animal_type} de chip {animal.chip_number} foi registrado com sucesso.")
+            self.__viewService.sucess_message(f"{animal.animal_type()} de chip {animal.chip_number} foi registrado com sucesso.")
         except Exception as e:
             print(f"Ocorreu um erro: {e}")
     
@@ -96,10 +103,15 @@ class Controller:
             if (adopter.role() == "Doador"):
                 raise Exception("Não é possível adotar um animal, pois o adotante é um doador.")
             
-            if (adopter.has_other_pets()):
+            if (adopter.has_other_pets == 'yes'):
                 raise Exception("Não é possível adotar um animal, pois o adotante já possui outros animais.")
             
-            if(adopter.home_type() == "Apartamento" and animal.size != "pequeno"):
+            print('----------')
+            print(animal.size)
+            print(adopter.home_type)
+            print('----------')
+
+            if(adopter.home_type == "small" and animal.size != "small"):
                 raise Exception("Não é possível adotar um cachorro, pois o adotante mora em apartamento.")
             
             if(not animal.vaccine_history.check_vaccines()):
@@ -108,8 +120,7 @@ class Controller:
             if (not adopter.check_adult()):
                 raise Exception("Não é possível adotar um animal, pois o adotante não é maior de idade.")
 
-            adoption = AdoptionRegister(date.today(), animal, adopter)
-            adoption.signed = True
+            adoption = AdoptionRegister(date.today(), animal, adopter, True)
             animal.isAdopted = True
 
             self.__animalRepository.update_animal(animal.chip_number, animal)

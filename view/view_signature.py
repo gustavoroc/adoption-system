@@ -38,9 +38,13 @@ class IViewSignature(ABC):
     def get_animal_information() -> Dict[str, str]:
         ...
         # {
+        # Isso monta a classe Animal
         #   chip_number: '...'
         #   name: '...'
         #   breed: '...'
+        #   animal_type: '...'
+        #   size: '...'
+        # ------------------
         # }
         
     @abstractmethod

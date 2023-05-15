@@ -29,8 +29,8 @@ class View(IViewSignature):
         name = input('Please enter adopter name: ')
         birth_date = input('Please enter adopter birth date (YYYY-MM-DD): ')
         address = input('Please enter adopter address: ')
-        home_type = input('Please enter adopter home type: ')
-        has_other_pets = input('Does the adopter have other pets (Yes/No): ')
+        home_type = input('Please enter adopter home type (small|medium|big): ')
+        has_other_pets = input('Does the adopter have other pets (yes/no): ')
         return {
             'cpf': cpf,
             'name': name,
@@ -44,10 +44,18 @@ class View(IViewSignature):
         chip_number = input('Please enter animal chip number: ')
         name = input('Please enter animal name: ')
         breed = input('Please enter animal breed: ')
+        animal_type = input('Please enter animal type (dog|cat): ')
+        if (animal_type == 'dog'):
+            size = input('Please enter animal size (small|medium|big): ')
+        else:
+            size = 'small'
+
         return {
             'chip_number': chip_number,
             'name': name,
-            'breed': breed
+            'breed': breed,
+            'animal_type': animal_type,
+            'size': size 
         }
 
     def get_person_cpf_information(self) -> str:

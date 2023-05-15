@@ -48,6 +48,6 @@ class Animal(ABC):
 
         self.__isAdopted = value
         
-    def animal_type():
-        ...
+    def animal_type(self):
+        return 'Animal'
     
