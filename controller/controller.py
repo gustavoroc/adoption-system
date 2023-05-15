@@ -31,6 +31,8 @@ class Controller:
             '7': lambda: self.register_donation(),
             '8': lambda: self.register_adoption(),
             '9': lambda: self.vaccine_animal(),
+            '10': lambda: self.adopter_relatory_by_period(),
+            '11': lambda: self.donor_relatory_by_period(),
             '0': lambda: self.exit()
         }
 
@@ -105,11 +107,6 @@ class Controller:
             
             if (adopter.has_other_pets == 'yes'):
                 raise Exception("Não é possível adotar um animal, pois o adotante já possui outros animais.")
-            
-            print('----------')
-            print(animal.size)
-            print(adopter.home_type)
-            print('----------')
 
             if(adopter.home_type == "small" and animal.size != "small"):
                 raise Exception("Não é possível adotar um cachorro, pois o adotante mora em apartamento.")
@@ -167,3 +164,20 @@ class Controller:
         except Exception as e:
             print(f"Ocorreu um erro: {e}")
         
+    def adopter_relatory_by_period(self):
+        try:
+            date = self.__viewService.get_period()
+            adoptions = self.__adoptionRepository.read_all_adoptions_by_period(date)
+            self.__viewService.generate_adoption_relatory(adoptions)
+            self.__viewService.sucess_message(f"Há {len(adoptions)} adoções no período {date.strftime('%Y-%m-%d')} - {date.today().strftime('%Y-%m-%d')})")
+        except Exception as e:
+            print(f"Ocorreu um erro: {e}")
+    
+    def donor_relatory_by_period(self):
+        try:
+            date = self.__viewService.get_period()
+            donations = self.__donationRepository.read_all_donations_by_period(date)
+            self.__viewService.generate_donation_relatory(donations)
+            self.__viewService.sucess_message(f"Há {len(donations)} doações no período {date.strftime('%Y-%m-%d')} - {date.today().strftime('%Y-%m-%d')})")
+        except Exception as e:
+            print(f"Ocorreu um erro: {e}")

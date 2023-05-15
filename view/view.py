@@ -9,7 +9,7 @@ class View(IViewSignature):
 
     def start(self) -> str:
         print('Choose a number')
-        value = input('1 - Register Donor\n2 - Register Adopter\n3 - Donor Relatory\n4 - Adopter Relatory\n5 - Available Pets Relatory\n6 - Register Pet for Donation\n7 - Register Donation\n8 - Register Adoption\n9 - Vaccine Animal\n0 - Exit\n')
+        value = input('1 - Register Donor\n2 - Register Adopter\n3 - Donor Relatory\n4 - Adopter Relatory\n5 - Available Pets Relatory\n6 - Register Pet for Donation\n7 - Register Donation\n8 - Register Adoption\n9 - Vaccine Animal\n10 - Adoption Relatory by date\n11 - Donation Relatory by date\n0 - Exit\n')
         return value
     
     def get_donor_information(self) -> Dict[str, str]:
@@ -82,6 +82,10 @@ class View(IViewSignature):
         for animal in animals:
             print(f"Chip Number: {animal.chip_number}\nName: {animal.name}\nBreed: {animal.breed}\nAdopted: {'Yes' if animal.isAdopted else 'No'}\n{'-'*50}")
 
+    def get_period(self) -> date:
+        date_time = input('Please enter a date (YYYY-MM-DD): ')
+        return date.fromisoformat(date_time)
+    
     def sucess_message(self, message: str) -> str:
         print(f'Success: {message}')
 

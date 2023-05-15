@@ -51,3 +51,19 @@ class AdoptionRegisterRepository:
                 self.__adoptions.remove(adoption)
                 return True
         return False
+
+    def read_all_adoptions_by_period(self, period_start: date) -> List[AdoptionRegister]:
+        period_end = date.today()
+        
+        if not isinstance(period_start, date):
+            raise TypeError("period_start must be an instance of date")
+
+        if not isinstance(period_end, date):
+            raise TypeError("period_end must be an instance of date")
+
+        adoptions_in_period = []
+        for adoption in self.__adoptions:
+            if period_start <= adoption.adoption_date <= period_end:
+                adoptions_in_period.append(adoption)
+        return adoptions_in_period
+    
