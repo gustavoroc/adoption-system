@@ -13,6 +13,6 @@
 
 ● Relatories : Complete ()
 
-     - Donations by period    : Tested ()
-     - Adoptions by period    : Tested ()
-     - Available animals      : Tested ()
+     - Donations by period    : Tested (✔️)
+     - Adoptions by period    : Tested (✔️)
+     - Available animals      : Tested (✔️)
