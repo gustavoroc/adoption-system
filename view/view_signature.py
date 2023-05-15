@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from datetime import date
 from typing import Dict, List
 from models.animal.animal import Animal
 from models.registers.adoption_register import AdoptionRegister
@@ -69,6 +70,10 @@ class IViewSignature(ABC):
     
     @abstractmethod
     def generate_animal_relatory(animals : List[Animal]) -> None:
+        ...
+    
+    @abstractmethod
+    def get_period() -> date:
         ...
     
     @abstractmethod

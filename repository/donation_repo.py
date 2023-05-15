@@ -56,3 +56,18 @@ class DonationRegisterRepository:
                 self.__donations.remove(donation)
                 return True
         return False
+
+    def read_all_donations_by_period(self, period_start: date) -> List[DonationRegister]:
+        period_end = date.today()
+        
+        if not isinstance(period_start, date):
+            raise TypeError("period_start must be an instance of date")
+
+        if not isinstance(period_end, date):
+            raise TypeError("period_end must be an instance of date")
+
+        donations_in_period = []
+        for donation in self.__donations:
+            if period_start <= donation.donation_date <= period_end:
+                donations_in_period.append(donation)
+        return donations_in_period
