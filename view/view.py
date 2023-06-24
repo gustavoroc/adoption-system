@@ -7,7 +7,7 @@ from view.view_signature import IViewSignature
 
 import PySimpleGUI as sg
 
-class View(IViewSignature):
+class View():
     def start(self):
         # Criar layout
         layout = [
@@ -233,3 +233,16 @@ class View(IViewSignature):
         window.close()
 
         return values['vaccine']
+
+    def error_message(self, message: str) -> str:
+        layout = [
+            [sg.Text(f'Error: {message}')],
+            [sg.Button('OK')]
+        ]
+
+        window = sg.Window('Mensagem de error', layout)
+
+        event, values = window.read()
+        window.close()
+
+        return message

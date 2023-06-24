@@ -44,7 +44,7 @@ class Controller:
             view_target_action = self.__viewService.start() 
             return self.viewCommand[view_target_action]()
         except Exception as e:
-            print(f"Ocorreu um erro: {str(e)}")
+            self._viewService.error_message(e)
 
     def register_donor(self):
         try:
@@ -53,7 +53,7 @@ class Controller:
             self.__personRepository.create_person(donor)
             self.__viewService.sucess_message(f"Doador de cpf {donor.cpf} registrado com sucesso.")
         except Exception as e:
-            print(f"Ocorreu um erro: {e}")
+            self._viewService.error_message(e)
         
     def register_adopter(self):
         try:
@@ -62,7 +62,7 @@ class Controller:
             self.__personRepository.create_person(adopter)
             self.__viewService.sucess_message(f"Adotante de cpf {adopter.cpf} registrado com sucesso.")
         except Exception as e:
-            print(f"Ocorreu um erro: {e}")
+            self._viewService.error_message(e)
 
     def register_pet_for_donation(self):
         try:
@@ -76,7 +76,7 @@ class Controller:
             self.__animalRepository.create_animal(animal)
             self.__viewService.sucess_message(f"{animal.animal_type()} de chip {animal.chip_number} foi registrado com sucesso.")
         except Exception as e:
-            print(f"Ocorreu um erro: {e}")
+            self._viewService.error_message(e)
     
     def register_donation(self):
         try:
@@ -93,7 +93,7 @@ class Controller:
             self.__donationRepository.create_donation(donation)
             self.__viewService.sucess_message(f"A doação do animal {animal.name} foi concluida com sucesso.")
         except Exception as e:
-            print(f"Ocorreu um erro: {e}")
+            self._viewService.error_message(e)
     
     def register_adoption(self):
         try:
@@ -124,7 +124,7 @@ class Controller:
             self.__adoptionRepository.create_adoption(adoption)
             self.__viewService.sucess_message(f'Animal de chip {animal.chip_number} adotado com sucesso pelo adotante de cpf: {adopter.cpf}.')
         except Exception as e:
-            print(f"Ocorreu um erro: {e}")
+            self._viewService.error_message(e)
 
     def vaccine_animal(self):
         try:
@@ -138,7 +138,7 @@ class Controller:
             self.__animalRepository.update_animal(animal.chip_number, animal)
             self.__viewService.sucess_message(f"Vacina {vaccine.name} adicionada ao animal de chip {animal.chip_number} com sucesso.")
         except Exception as e:
-            print(f"Ocorreu um erro: {e}")
+            self._viewService.error_message(e)
 
     def donor_relatory(self):
         try:
@@ -146,7 +146,7 @@ class Controller:
             self.__viewService.generate_donation_relatory(donations)
             self.__viewService.sucess_message(f"{len(donations)} de doações foram feitas")
         except Exception as e:
-            print(f"Ocorreu um erro: {e}")
+            self._viewService.error_message(e)
 
     def adopter_relatory(self):
         try: 
@@ -154,7 +154,7 @@ class Controller:
             self.__viewService.generate_adoption_relatory(adoptions)
             self.__viewService.sucess_message(f"{len(adoptions)} de adoções foram feitas")
         except Exception as e:
-            print(f"Ocorreu um erro: {e}")
+            self._viewService.error_message(e)
 
     def available_pets_relatory(self):
         try:
@@ -162,7 +162,7 @@ class Controller:
             self.__viewService.generate_animal_relatory(animals)
             self.__viewService.sucess_message(f"Há {len(animals)} animais disponíveis para adoação")
         except Exception as e:
-            print(f"Ocorreu um erro: {e}")
+            self._viewService.error_message(e)
         
     def adopter_relatory_by_period(self):
         try:
@@ -171,7 +171,7 @@ class Controller:
             self.__viewService.generate_adoption_relatory(adoptions)
             self.__viewService.sucess_message(f"Há {len(adoptions)} adoções no período {date.strftime('%Y-%m-%d')} - {date.today().strftime('%Y-%m-%d')})")
         except Exception as e:
-            print(f"Ocorreu um erro: {e}")
+            self._viewService.error_message(e)
     
     def donor_relatory_by_period(self):
         try:
@@ -180,4 +180,4 @@ class Controller:
             self.__viewService.generate_donation_relatory(donations)
             self.__viewService.sucess_message(f"Há {len(donations)} doações no período {date.strftime('%Y-%m-%d')} - {date.today().strftime('%Y-%m-%d')})")
         except Exception as e:
-            print(f"Ocorreu um erro: {e}")
+            self._viewService.error_message(e)
