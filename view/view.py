@@ -5,61 +5,118 @@ from models.registers.adoption_register import AdoptionRegister
 from models.registers.donation_register import DonationRegister
 from view.view_signature import IViewSignature
 
+import PySimpleGUI as sg
+
 class View(IViewSignature):
+    def start(self):
+        # Criar layout
+        layout = [
+            [sg.Text('Escolha um número')],
+            [sg.Button('1 - Registrar Doador', key='1')],
+            [sg.Button('2 - Registrar Adotante', key='2')],
+            [sg.Button('3 - Relatório do Doador', key='3')],
+            [sg.Button('4 - Relatório do Adotante', key='4')],
+            [sg.Button('5 - Relatório de Pets Disponíveis', key='5')],
+            [sg.Button('6 - Registrar Pet para Doação', key='6')],
+            [sg.Button('7 - Registrar Doação', key='7')],
+            [sg.Button('8 - Registrar Adoção', key='8')],
+            [sg.Button('9 - Vacinar Animal', key='9')],
+            [sg.Button('10 - Relatório de Adoção por Data', key='10')],
+            [sg.Button('11 - Relatório de Doação por Data', key='11')],
+            [sg.Button('0 - Sair', key='0')],
+        ]
 
-    def start(self) -> str:
-        print('Choose a number')
-        value = input('1 - Register Donor\n2 - Register Adopter\n3 - Donor Relatory\n4 - Adopter Relatory\n5 - Available Pets Relatory\n6 - Register Pet for Donation\n7 - Register Donation\n8 - Register Adoption\n9 - Vaccine Animal\n10 - Adoption Relatory by date\n11 - Donation Relatory by date\n0 - Exit\n')
-        return value
-    
-    def get_donor_information(self) -> Dict[str, str]:
-        cpf = input('Please enter donor CPF: ')
-        name = input('Please enter donor name: ')
-        birth_date = input('Please enter donor birth date (YYYY-MM-DD): ')
-        address = input('Please enter donor address: ')
+        window = sg.Window('Escolha uma Opção', layout)
+        x = window.read()       
+        window.close()
+
+        return (x[0])
+
+    def get_donor_information(self):
+        layout = [
+            [sg.Text('Por favor, insira o CPF do doador:'), sg.InputText(key='cpf')],
+            [sg.Text('Por favor, insira o nome do doador:'), sg.InputText(key='name')],
+            [sg.Text('Por favor, insira a data de nascimento do doador (AAAA-MM-DD):'), sg.InputText(key='birth_date')],
+            [sg.Text('Por favor, insira o endereço do doador:'), sg.InputText(key='address')],
+            [sg.Button('OK'), sg.Button('Cancelar')]
+        ]
+
+        window = sg.Window('Informações do Doador', layout)
+
+       
+        event, values = window.read()
+        window.close()
+        
         return {
-            'cpf': cpf,
-            'name': name,
-            'birth_date': date.fromisoformat(birth_date),
-            'address': address
+                'cpf': values['cpf'],
+                'name': values['name'],
+                'birth_date': date.fromisoformat(values['birth_date']),
+                'address': values['address']
+           }
+    
+    def get_adopter_information(self):
+        layout = [
+            [sg.Text('Por favor, insira o CPF do adotante:'), sg.InputText(key='cpf')],
+            [sg.Text('Por favor, insira o nome do adotante:'), sg.InputText(key='name')],
+            [sg.Text('Por favor, insira a data de nascimento do adotante (AAAA-MM-DD):'), sg.InputText(key='birth_date')],
+            [sg.Text('Por favor, insira o endereço do adotante:'), sg.InputText(key='address')],
+            [sg.Text('Por favor, insira o tipo de residência do adotante (pequeno|médio|grande):'), sg.InputText(key='home_type')],
+            [sg.Text('O adotante possui outros pets (sim/não):'), sg.InputText(key='has_other_pets')],
+            [sg.Button('OK'), sg.Button('Cancelar')]
+        ]
+
+        window = sg.Window('Informações do Adotante', layout)
+        event, values = window.read()
+
+        window.close()
+
+        return {
+                'cpf': values['cpf'],
+                'name': values['name'],
+                'birth_date': date.fromisoformat(values['birth_date']),
+                'address': values['address'],
+                'home_type': values['home_type'],
+                'has_other_pets': values['has_other_pets']
         }
     
-    def get_adopter_information(self) -> Dict[str, str]:
-        cpf = input('Please enter adopter CPF: ')
-        name = input('Please enter adopter name: ')
-        birth_date = input('Please enter adopter birth date (YYYY-MM-DD): ')
-        address = input('Please enter adopter address: ')
-        home_type = input('Please enter adopter home type (small|medium|big): ')
-        has_other_pets = input('Does the adopter have other pets (yes/no): ')
-        return {
-            'cpf': cpf,
-            'name': name,
-            'birth_date': date.fromisoformat(birth_date),
-            'address': address,
-            'home_type': home_type,
-            'has_other_pets': has_other_pets
-        }
+    def get_animal_information(self):
+        layout = [
+            [sg.Text('Por favor, insira o número do chip do animal:'), sg.InputText(key='chip_number')],
+            [sg.Text('Por favor, insira o nome do animal:'), sg.InputText(key='name')],
+            [sg.Text('Por favor, insira a raça do animal:'), sg.InputText(key='breed')],
+            [sg.Text('Por favor, insira o tipo de animal (cão|gato):'), sg.InputText(key='animal_type')],
+            [sg.Text('Por favor, insira o porte do animal (pequeno|médio|grande):'), sg.InputText(key='size')],
+            [sg.Button('OK')]
+        ]
 
-    def get_animal_information(self) -> Dict[str, str]:
-        chip_number = input('Please enter animal chip number: ')
-        name = input('Please enter animal name: ')
-        breed = input('Please enter animal breed: ')
-        animal_type = input('Please enter animal type (dog|cat): ')
-        if (animal_type == 'dog'):
-            size = input('Please enter animal size (small|medium|big): ')
-        else:
-            size = 'small'
+        window = sg.Window('Informações do Animal', layout)
+
+        event, values = window.read()
+        window.close()
+
+        animal_type = values['animal_type']
+        size = values['size'] if animal_type.lower() == 'dog' else 'small'
 
         return {
-            'chip_number': chip_number,
-            'name': name,
-            'breed': breed,
+            'chip_number': values['chip_number'],
+            'name': values['name'],
+            'breed': values['breed'],
             'animal_type': animal_type,
-            'size': size 
+            'size': size
         }
 
-    def get_person_cpf_information(self) -> str:
-        return input('Please enter the person CPF: ')
+    def get_person_cpf_information(self):
+        layout = [
+            [sg.Text('Por favor, insira o CPF da pessoa:'), sg.InputText(key='cpf')],
+            [sg.Button('OK')]
+        ]
+
+        window = sg.Window('Informações do CPF', layout)
+
+        event, values = window.read()
+        window.close()
+
+        return values['cpf']
     
     def get_animal_chip_number(self) -> str:
         return input('Please enter the animal chip number: ')
