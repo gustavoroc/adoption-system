@@ -1,13 +1,14 @@
-from typing import Dict, List
+from typing import List
 from datetime import date
 from models.animal.animal import Animal
+from models.person.adopter import Adopter
+from models.person.donor import Donor
 from models.registers.adoption_register import AdoptionRegister
 from models.registers.donation_register import DonationRegister
-from view.view_signature import IViewSignature
 
 import PySimpleGUI as sg
 
-class View(IViewSignature):
+class View:
     def start(self):
         # Criar layout
         layout = [
@@ -23,14 +24,20 @@ class View(IViewSignature):
             [sg.Button('9 - Vacinar Animal', key='9')],
             [sg.Button('10 - Relatório de Adoção por Data', key='10')],
             [sg.Button('11 - Relatório de Doação por Data', key='11')],
+            [sg.Button('12 - Atualizar Animal', key='12')],
+            [sg.Button('13 - Atualizar Doador', key='13')],
+            [sg.Button('14 - Listar Doadores', key='14')],
+            [sg.Button('15 - Listar Adotantes', key='15')],
+            [sg.Button('16 - Deletar Pessoa', key='16')],
+            [sg.Button('17 - Deletar Animal', key='17')],
             [sg.Button('0 - Sair', key='0')],
         ]
 
         window = sg.Window('Escolha uma Opção', layout)
-        x = window.read()       
+        event, _ = window.read()       
         window.close()
 
-        return (x[0])
+        return event
 
     def get_donor_information(self):
         layout = [
@@ -42,17 +49,15 @@ class View(IViewSignature):
         ]
 
         window = sg.Window('Informações do Doador', layout)
-
-       
         event, values = window.read()
         window.close()
         
         return {
-                'cpf': values['cpf'],
-                'name': values['name'],
-                'birth_date': date.fromisoformat(values['birth_date']),
-                'address': values['address']
-           }
+            'cpf': values['cpf'],
+            'name': values['name'],
+            'birth_date': date.fromisoformat(values['birth_date']),
+            'address': values['address']
+        }
     
     def get_adopter_information(self):
         layout = [
@@ -67,16 +72,15 @@ class View(IViewSignature):
 
         window = sg.Window('Informações do Adotante', layout)
         event, values = window.read()
-
         window.close()
 
         return {
-                'cpf': values['cpf'],
-                'name': values['name'],
-                'birth_date': date.fromisoformat(values['birth_date']),
-                'address': values['address'],
-                'home_type': values['home_type'],
-                'has_other_pets': values['has_other_pets']
+            'cpf': values['cpf'],
+            'name': values['name'],
+            'birth_date': date.fromisoformat(values['birth_date']),
+            'address': values['address'],
+            'home_type': values['home_type'],
+            'has_other_pets': values['has_other_pets']
         }
     
     def get_animal_information(self):
@@ -90,7 +94,6 @@ class View(IViewSignature):
         ]
 
         window = sg.Window('Informações do Animal', layout)
-
         event, values = window.read()
         window.close()
 
@@ -112,7 +115,6 @@ class View(IViewSignature):
         ]
 
         window = sg.Window('Informações do CPF', layout)
-
         event, values = window.read()
         window.close()
 
@@ -125,7 +127,6 @@ class View(IViewSignature):
         ]
 
         window = sg.Window('Informações do Chip do Animal', layout)
-
         event, values = window.read()
         window.close()
 
@@ -138,112 +139,163 @@ class View(IViewSignature):
         ]
 
         window = sg.Window('Motivo da Doação', layout)
-
         event, values = window.read()
         window.close()
 
         return values['reason']
      
-    def generate_donation_relatory(self, donations: List[DonationRegister]) -> None:
+    def generate_donation_report(self, donations: List[DonationRegister]) -> None:
         output_text = ''
         for donation in donations:
-            output_text += f"Date: {donation.donation_date}\nDonated Animal: {donation.donated_animal.name}\nDonor: {donation.donor.name}\nReason: {donation.reason}\n{'-' * 50}\n"
+            output_text += f"Data: {donation.donation_date}\nAnimal doado: {donation.donated_animal.name}\nDoador: {donation.donor.name}\nMotivo: {donation.reason}\n{'-' * 50}\n"
 
         layout = [
-            [sg.Text('Donation Report:')],
+            [sg.Text('Relatório de Doações:')],
             [sg.Multiline(output_text, size=(50, len(donations) * 5), disabled=True)],
             [sg.Button('OK')]
         ]
 
         window = sg.Window('Relatório de Doações', layout)
-
-        event, values = window.read()
+        event, _ = window.read()
         window.close()
 
-    def generate_adoption_relatory(self, adoptions: List[AdoptionRegister]) -> None:
+    def generate_adoption_report(self, adoptions: List[AdoptionRegister]) -> None:
         output_text = ''
         for adoption in adoptions:
-            output_text += f"Date: {adoption.adoption_date}\nAdopted Animal: {adoption.adopted_animal.name}\nAdopter: {adoption.adopter.name}\nSigned: {'Yes' if adoption.signed else 'No'}\n{'-' * 50}\n"
+            output_text += f"Data: {adoption.adoption_date}\nAnimal adotado: {adoption.adopted_animal.name}\nAdotante: {adoption.adopter.name}\nAssinado: {'Sim' if adoption.signed else 'Não'}\n{'-' * 50}\n"
 
         layout = [
-            [sg.Text('Adoption Report:')],
+            [sg.Text('Relatório de Adoções:')],
             [sg.Multiline(output_text, size=(50, len(adoptions) * 5), disabled=True)],
             [sg.Button('OK')]
         ]
 
         window = sg.Window('Relatório de Adoções', layout)
-
-        event, values = window.read()
+        event, _ = window.read()
         window.close()
 
-    def generate_animal_relatory(self, animals: List[Animal]) -> None:
+    def generate_animal_report(self, animals: List[Animal]) -> None:
+        output_text = ''
+        for animal in animals:
+            output_text += f"Número do Chip: {animal.chip_number}\nNome: {animal.name}\nRaça: {animal.breed}\nAdotado: {'Sim' if animal.isAdopted else 'Não'}\n{'-' * 50}\n"
+
         layout = [
-            [sg.Text('Animal Report:')],
-            [sg.Text('', key='output', size=(50, len(animals) * 5))],
+            [sg.Text('Relatório de Animais:')],
+            [sg.Multiline(output_text, size=(50, len(animals) * 5), disabled=True)],
             [sg.Button('OK')]
         ]
 
-        window = sg.Window('Relatório de Animais', layout, finalize=True)
-
-        output_text = ''
-        for animal in animals:
-            output_text += f"Chip Number: {animal.chip_number}\nName: {animal.name}\nBreed: {animal.breed}\nAdopted: {'Yes' if animal.isAdopted else 'No'}\n{'-' * 50}\n"
-
-        window['output'].update(output_text)
-
-        event, values = window.read()
+        window = sg.Window('Relatório de Animais', layout)
+        event, _ = window.read()
         window.close()
 
 
     def get_period(self) -> date:
         layout = [
-            [sg.Text('Please enter a date (YYYY-MM-DD):'), sg.InputText(key='date')],
+            [sg.Text('Por favor, insira uma data (AAAA-MM-DD):'), sg.InputText(key='date')],
             [sg.Button('OK')]
         ]
 
         window = sg.Window('Período', layout)
-
         event, values = window.read()
         window.close()
 
-        date_time = values['date']
-        return date.fromisoformat(date_time)
+        date_str = values['date']
+        return date.fromisoformat(date_str)
  
-    def sucess_message(self, message: str) -> str:
+    def success_message(self, message: str) -> None:
         layout = [
-            [sg.Text(f'Success: {message}')],
+            [sg.Text(f'Sucesso: {message}')],
             [sg.Button('OK')]
         ]
 
         window = sg.Window('Mensagem de Sucesso', layout)
-
-        event, values = window.read()
+        event, _ = window.read()
         window.close()
-
-        return message
 
     def get_vaccine(self) -> str:
         layout = [
-            [sg.Text('Please enter the vaccine name:'), sg.InputText(key='vaccine')],
+            [sg.Text('Por favor, insira o nome da vacina:'), sg.InputText(key='vaccine')],
             [sg.Button('OK')]
         ]
 
         window = sg.Window('Nome da Vacina', layout)
-
         event, values = window.read()
         window.close()
 
         return values['vaccine']
 
-    def error_message(self, message: str) -> str:
+    def error_message(self, message: str) -> None:
         layout = [
-            [sg.Text(f'Error: {message}')],
+            [sg.Text(f'Erro: {message}')],
             [sg.Button('OK')]
         ]
 
-        window = sg.Window('Mensagem de error', layout)
+        window = sg.Window('Mensagem de Erro', layout)
+        event, _ = window.read()
+        window.close()
 
+    def get_updated_animal_data(self):
+        layout = [
+            [sg.Text('Por favor, insira o novo nome do animal:'), sg.InputText(key='name')],
+            [sg.Text('Por favor, insira a nova raça do animal:'), sg.InputText(key='breed')],
+            [sg.Text('Por favor, insira o novo porte do animal (pequeno|médio|grande):'), sg.InputText(key='size')],
+            [sg.Button('OK')]
+        ]
+
+        window = sg.Window('Atualizar Informações do Animal', layout)
         event, values = window.read()
         window.close()
 
-        return message
+        return {
+            'name': values['name'],
+            'breed': values['breed'],
+            'size': values['size']
+        }
+    
+    def get_updated_donor_data(self):
+        layout = [
+            [sg.Text('Por favor, insira o novo nome do doador:'), sg.InputText(key='name')],
+            [sg.Text('Por favor, insira o novo endereço do doador:'), sg.InputText(key='address')],
+            [sg.Button('OK'), sg.Button('Cancelar')]
+        ]
+
+        window = sg.Window('Atualizar Informações do Doador', layout)
+        event, values = window.read()
+        window.close()
+
+        return {
+            'name': values['name'],
+            'address': values['address']
+        }
+    
+    def get_all_adopters_view(self, adopters: List[Adopter]) -> None:
+        output_text = ""
+        for adopter in adopters:
+            output_text += f"CPF: {adopter.cpf}\nNome: {adopter.name}\nData de Nascimento: {adopter.birth_date}\nEndereço: {adopter.address}\nTipo de Residência: {adopter.home_type}\nPossui outros pets: {adopter.has_other_pets}\n{'-' * 50}\n"
+
+        layout = [
+            [sg.Text('Adotantes Registrados:')],
+            [sg.Multiline(output_text, size=(50, len(adopters) * 6), disabled=True)],
+            [sg.Button('OK')]
+        ]
+
+        window = sg.Window('Adotantes Registrados', layout)
+        event, _ = window.read()
+        window.close()
+
+    def get_all_donors_view(self, donors: List[Donor]) -> None:
+        output_text = ""
+        for donor in donors:
+            output_text += f"CPF: {donor.cpf}\nNome: {donor.name}\nData de Nascimento: {donor.birth_date}\nEndereço: {donor.address}\n{'-' * 50}\n"
+
+        layout = [
+            [sg.Text('Doadores Registrados:')],
+            [sg.Multiline(output_text, size=(50, len(donors) * 4), disabled=True)],
+            [sg.Button('OK')]
+        ]
+
+        window = sg.Window('Doadores Registrados', layout)
+        event, _ = window.read()
+        window.close()
+

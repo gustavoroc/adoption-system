@@ -6,6 +6,9 @@ from models.registers.donation_register import DonationRegister
 class DonationRegisterRepository:
     def __init__(self):
         self.__filename = "donations.pkl"
+        self.__donations: List[DonationRegister] = []
+
+    def __load_data(self):
         try:
             with open(self.__filename, "rb") as f:
                 self.__donations: List[DonationRegister] = pickle.load(f)
@@ -17,6 +20,7 @@ class DonationRegisterRepository:
             pickle.dump(self.__donations, f)
 
     def create_donation(self, donation: DonationRegister) -> bool:
+        self.__load_data()
         if not isinstance(donation, DonationRegister):
             raise TypeError("donation must be an instance of DonationRegister")
 
@@ -33,6 +37,7 @@ class DonationRegisterRepository:
         return True
 
     def read_donation(self, cpf: str) -> Optional[DonationRegister]:
+        self.__load_data()
         if not isinstance(cpf, str):
             raise TypeError("CPF must be a string")
 
@@ -42,9 +47,11 @@ class DonationRegisterRepository:
         return None
 
     def read_all_donations(self) -> List[DonationRegister]:
+        self.__load_data()
         return self.__donations
 
     def update_donation(self, cpf: str, new_donation: DonationRegister) -> bool:
+        self.__load_data()
         if not isinstance(cpf, str):
             raise TypeError("CPF must be a string")
 
@@ -59,6 +66,7 @@ class DonationRegisterRepository:
         return False
 
     def delete_donation(self, cpf: str) -> bool:
+        self.__load_data()
         if not isinstance(cpf, str):
             raise TypeError("CPF must be a string")
 
@@ -70,6 +78,7 @@ class DonationRegisterRepository:
         return False
 
     def read_all_donations_by_period(self, period_start: date) -> List[DonationRegister]:
+        self.__load_data()
         period_end = date.today()
         
         if not isinstance(period_start, date):

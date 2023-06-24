@@ -7,6 +7,9 @@ from models.person.person import Person
 class PersonRepository:
     def __init__(self):
         self.__filename = "people.pkl"
+        self.__people: List[Person] = []
+
+    def __load_data(self):
         try:
             with open(self.__filename, "rb") as f:
                 self.__people: List[Person] = pickle.load(f)
@@ -18,6 +21,7 @@ class PersonRepository:
             pickle.dump(self.__people, f)
 
     def create_person(self, person: Person) -> None:
+        self.__load_data()
         if not isinstance(person, Person):
             raise ValueError("Input must be an instance of Person class.")
         for existing_person in self.__people:
@@ -27,9 +31,11 @@ class PersonRepository:
         self.save_to_file()
 
     def get_all_people(self) -> List[Person]:
+        self.__load_data()
         return self.__people
 
     def get_person_by_cpf(self, cpf: str) -> Optional[Person]:
+        self.__load_data()
         if not isinstance(cpf, str):
             raise ValueError("CPF must be a string.")
         for person in self.__people:
@@ -38,6 +44,7 @@ class PersonRepository:
         raise ValueError("No person with the provided CPF exists.")
 
     def update_person(self, cpf: str, new_person: Person) -> Optional[Person]:
+        self.__load_data()
         if not isinstance(cpf, str) or not isinstance(new_person, Person):
             raise ValueError("CPF must be a string and new_person must be an instance of Person class.")
         for i, person in enumerate(self.__people):
@@ -48,6 +55,7 @@ class PersonRepository:
         raise ValueError("No person with the provided CPF exists.")
 
     def delete_person(self, cpf: str) -> bool:
+        self.__load_data()
         if not isinstance(cpf, str):
             raise ValueError("CPF must be a string.")
         for i, person in enumerate(self.__people):
@@ -58,7 +66,9 @@ class PersonRepository:
         raise ValueError("No person with the provided CPF exists.")
     
     def get_all_donors(self) -> List[Donor]:
+        self.__load_data()
         return [person for person in self.__people if isinstance(person, Donor)]
     
     def get_all_adopters(self) -> List[Adopter]:
+        self.__load_data()
         return [person for person in self.__people if isinstance(person, Adopter)]
