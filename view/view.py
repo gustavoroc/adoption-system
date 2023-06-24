@@ -145,37 +145,33 @@ class View(IViewSignature):
         return values['reason']
      
     def generate_donation_relatory(self, donations: List[DonationRegister]) -> None:
+        output_text = ''
+        for donation in donations:
+            output_text += f"Date: {donation.donation_date}\nDonated Animal: {donation.donated_animal.name}\nDonor: {donation.donor.name}\nReason: {donation.reason}\n{'-' * 50}\n"
+
         layout = [
             [sg.Text('Donation Report:')],
-            [sg.Multiline('', key='output', size=(50, len(donations) * 5), disabled=True)],
+            [sg.Multiline(output_text, size=(50, len(donations) * 5), disabled=True)],
             [sg.Button('OK')]
         ]
 
         window = sg.Window('Relatório de Doações', layout)
 
-        output_text = ''
-        for donation in donations:
-            output_text += f"Date: {donation.donation_date}\nDonated Animal: {donation.donated_animal.name}\nDonor: {donation.donor.name}\nReason: {donation.reason}\n{'-' * 50}\n"
-
-        window['output'].update(value=output_text)
-
         event, values = window.read()
         window.close()
 
     def generate_adoption_relatory(self, adoptions: List[AdoptionRegister]) -> None:
-        layout = [
-            [sg.Text('Adoption Report:')],
-            [sg.Multiline('', key='output', size=(50, len(adoptions) * 5), disabled=True)],
-            [sg.Button('OK')]
-        ]
-
-        window = sg.Window('Relatório de Adoções', layout)
-
         output_text = ''
         for adoption in adoptions:
             output_text += f"Date: {adoption.adoption_date}\nAdopted Animal: {adoption.adopted_animal.name}\nAdopter: {adoption.adopter.name}\nSigned: {'Yes' if adoption.signed else 'No'}\n{'-' * 50}\n"
 
-        window['output'].update(value=output_text)
+        layout = [
+            [sg.Text('Adoption Report:')],
+            [sg.Multiline(output_text, size=(50, len(adoptions) * 5), disabled=True)],
+            [sg.Button('OK')]
+        ]
+
+        window = sg.Window('Relatório de Adoções', layout)
 
         event, values = window.read()
         window.close()
