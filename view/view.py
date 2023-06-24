@@ -147,7 +147,7 @@ class View(IViewSignature):
     def generate_donation_relatory(self, donations: List[DonationRegister]) -> None:
         layout = [
             [sg.Text('Donation Report:')],
-            [sg.Text('', key='output', size=(50, len(donations) * 5))],
+            [sg.Multiline('', key='output', size=(50, len(donations) * 5))],
             [sg.Button('OK')]
         ]
 
@@ -161,11 +161,11 @@ class View(IViewSignature):
 
         event, values = window.read()
         window.close()
-    
+
     def generate_adoption_relatory(self, adoptions: List[AdoptionRegister]) -> None:
         layout = [
             [sg.Text('Adoption Report:')],
-            [sg.Text('', key='output', size=(50, len(adoptions) * 5))],
+            [sg.Multiline('', key='output', size=(50, len(adoptions) * 5))],
             [sg.Button('OK')]
         ]
 
