@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from errors.client_error import ClientError
 from models.vaccine.vaccine_history import VaccineHistory
 
 class Animal(ABC):
@@ -44,7 +45,7 @@ class Animal(ABC):
     @isAdopted.setter
     def isAdopted(self, value):
         if not isinstance(value, bool):
-            raise ValueError('isAdopted must be a boolean value')
+            raise ClientError('isAdopted must be a boolean value')
 
         self.__isAdopted = value
         
