@@ -119,32 +119,121 @@ class View(IViewSignature):
         return values['cpf']
     
     def get_animal_chip_number(self) -> str:
-        return input('Please enter the animal chip number: ')
-        
-    def get_reason_donation(self) -> str:
-        return input('Please enter the reason for the donation: ')
-        
-    def generate_donation_relatory(self, donations : List[DonationRegister]) -> None:
-        print('Donation Report:')
-        for donation in donations:
-            print(f"Date: {donation.donation_date}\nDonated Animal: {donation.donated_animal.name}\nDonor: {donation.donor.name}\nReason: {donation.reason}\n{'-'*50}")
-    
-    def generate_adoption_relatory(self, adoptions : List[AdoptionRegister]) -> None:
-        print('Adoption Report:')
-        for adoption in adoptions:
-            print(f"Date: {adoption.adoption_date}\nAdopted Animal: {adoption.adopted_animal.name}\nAdopter: {adoption.adopter.name}\nSigned: {'Yes' if adoption.signed else 'No'}\n{'-'*50}")
+        layout = [
+            [sg.Text('Por favor, insira o número do chip do animal:'), sg.InputText(key='chip_number')],
+            [sg.Button('OK')]
+        ]
 
-    def generate_animal_relatory(self, animals : List[Animal]) -> None:
-        print('Animal Report:')
+        window = sg.Window('Informações do Chip do Animal', layout)
+
+        event, values = window.read()
+        window.close()
+
+        return values['chip_number']
+   
+    def get_reason_donation(self) -> str:
+        layout = [
+            [sg.Text('Por favor, insira o motivo da doação:'), sg.InputText(key='reason')],
+            [sg.Button('OK')]
+        ]
+
+        window = sg.Window('Motivo da Doação', layout)
+
+        event, values = window.read()
+        window.close()
+
+        return values['reason']
+     
+    def generate_donation_relatory(self, donations: List[DonationRegister]) -> None:
+        layout = [
+            [sg.Text('Donation Report:')],
+            [sg.Text('', key='output', size=(50, len(donations) * 5))],
+            [sg.Button('OK')]
+        ]
+
+        window = sg.Window('Relatório de Doações', layout)
+
+        output_text = ''
+        for donation in donations:
+            output_text += f"Date: {donation.donation_date}\nDonated Animal: {donation.donated_animal.name}\nDonor: {donation.donor.name}\nReason: {donation.reason}\n{'-' * 50}\n"
+
+        window['output'].update(output_text)
+
+        event, values = window.read()
+        window.close()
+    
+    def generate_adoption_relatory(self, adoptions: List[AdoptionRegister]) -> None:
+        layout = [
+            [sg.Text('Adoption Report:')],
+            [sg.Text('', key='output', size=(50, len(adoptions) * 5))],
+            [sg.Button('OK')]
+        ]
+
+        window = sg.Window('Relatório de Adoções', layout)
+
+        output_text = ''
+        for adoption in adoptions:
+            output_text += f"Date: {adoption.adoption_date}\nAdopted Animal: {adoption.adopted_animal.name}\nAdopter: {adoption.adopter.name}\nSigned: {'Yes' if adoption.signed else 'No'}\n{'-' * 50}\n"
+
+        window['output'].update(output_text)
+
+        event, values = window.read()
+        window.close()
+
+    def generate_animal_relatory(self, animals: List[Animal]) -> None:
+        layout = [
+            [sg.Text('Animal Report:')],
+            [sg.Text('', key='output', size=(50, len(animals) * 5))],
+            [sg.Button('OK')]
+        ]
+
+        window = sg.Window('Relatório de Animais', layout)
+
+        output_text = ''
         for animal in animals:
-            print(f"Chip Number: {animal.chip_number}\nName: {animal.name}\nBreed: {animal.breed}\nAdopted: {'Yes' if animal.isAdopted else 'No'}\n{'-'*50}")
+            output_text += f"Chip Number: {animal.chip_number}\nName: {animal.name}\nBreed: {animal.breed}\nAdopted: {'Yes' if animal.isAdopted else 'No'}\n{'-' * 50}\n"
+
+        window['output'].update(output_text)
+
+        event, values = window.read()
+        window.close()
 
     def get_period(self) -> date:
-        date_time = input('Please enter a date (YYYY-MM-DD): ')
+        layout = [
+            [sg.Text('Please enter a date (YYYY-MM-DD):'), sg.InputText(key='date')],
+            [sg.Button('OK')]
+        ]
+
+        window = sg.Window('Período', layout)
+
+        event, values = window.read()
+        window.close()
+
+        date_time = values['date']
         return date.fromisoformat(date_time)
-    
-    def sucess_message(self, message: str) -> str:
-        print(f'Success: {message}')
+ 
+    def success_message(self, message: str) -> str:
+        layout = [
+            [sg.Text(f'Success: {message}')],
+            [sg.Button('OK')]
+        ]
+
+        window = sg.Window('Mensagem de Sucesso', layout)
+
+        event, values = window.read()
+        window.close()
+
+        return message
 
     def get_vaccine(self) -> str:
-        return input('Please enter the vaccine name: ')
+        layout = [
+            [sg.Text('Please enter the vaccine name:'), sg.InputText(key='vaccine')],
+            [sg.Button('OK')]
+        ]
+
+        window = sg.Window('Nome da Vacina', layout)
+
+        event, values = window.read()
+        window.close()
+
+        return values['vaccine']
