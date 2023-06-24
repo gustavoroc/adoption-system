@@ -9,6 +9,7 @@ from view.view import View
 
 def main():
     view = View()
+    
     donor_controller = DonorController(view)
     adopter_controller = AdopterController(view)
     report_controller = ReportController(view)

@@ -1,6 +1,7 @@
 import pickle
 from datetime import date
 from typing import List, Optional
+from errors.client_error import ClientError
 from models.registers.adoption_register import AdoptionRegister
 
 class AdoptionRegisterRepository:
@@ -22,10 +23,10 @@ class AdoptionRegisterRepository:
     def create_adoption(self, adoption: AdoptionRegister) -> bool:
         self.__load_data()
         if not isinstance(adoption, AdoptionRegister):
-            raise TypeError("adoption must be an instance of AdoptionRegister")
+            raise ClientError("adoption must be an instance of AdoptionRegister")
         
         if not isinstance(adoption.adoption_date, date):
-            raise TypeError("adoption_date must be an instance of date")
+            raise ClientError("adoption_date must be an instance of date")
 
         self.__adoptions.append(adoption)
         self.save_to_file()
@@ -34,7 +35,7 @@ class AdoptionRegisterRepository:
     def read_adoption(self, cpf: str) -> Optional[AdoptionRegister]:
         self.__load_data()
         if not isinstance(cpf, str):
-            raise TypeError("CPF must be a string")
+            raise ClientError("CPF must be a string")
 
         for adoption in self.__adoptions:
             if adoption.adopter.cpf == cpf:
@@ -48,10 +49,10 @@ class AdoptionRegisterRepository:
     def update_adoption(self, cpf: str, new_adoption: AdoptionRegister) -> bool:
         self.__load_data()
         if not isinstance(cpf, str):
-            raise TypeError("CPF must be a string")
+            raise ClientError("CPF must be a string")
 
         if not isinstance(new_adoption, AdoptionRegister):
-            raise TypeError("new_adoption must be an instance of AdoptionRegister")
+            raise ClientError("new_adoption must be an instance of AdoptionRegister")
 
         for i, adoption in enumerate(self.__adoptions):
             if adoption.adopter.cpf == cpf:
@@ -63,7 +64,7 @@ class AdoptionRegisterRepository:
     def delete_adoption(self, cpf: str) -> bool:
         self.__load_data()
         if not isinstance(cpf, str):
-            raise TypeError("CPF must be a string")
+            raise ClientError("CPF must be a string")
 
         for adoption in self.__adoptions:
             if adoption.adopter.cpf == cpf:
@@ -77,10 +78,10 @@ class AdoptionRegisterRepository:
         period_end = date.today()
         
         if not isinstance(period_start, date):
-            raise TypeError("period_start must be an instance of date")
+            raise ClientError("period_start must be an instance of date")
 
         if not isinstance(period_end, date):
-            raise TypeError("period_end must be an instance of date")
+            raise ClientError("period_end must be an instance of date")
 
         adoptions_in_period = []
         for adoption in self.__adoptions:

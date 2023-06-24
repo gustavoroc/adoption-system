@@ -1,6 +1,8 @@
 import pickle
 from datetime import date
 from typing import List, Optional
+from errors.client_error import ClientError
+from errors.duplicated_instance_error import DuplicatedInstanceError
 from models.registers.donation_register import DonationRegister
 
 class DonationRegisterRepository:
@@ -22,15 +24,15 @@ class DonationRegisterRepository:
     def create_donation(self, donation: DonationRegister) -> bool:
         self.__load_data()
         if not isinstance(donation, DonationRegister):
-            raise TypeError("donation must be an instance of DonationRegister")
+            raise ClientError("donation must be an instance of DonationRegister")
 
         if not isinstance(donation.donation_date, date):
-            raise TypeError("donation_date must be an instance of date")
+            raise ClientError("donation_date must be an instance of date")
         
         # check if the dog is already registered in the donations list
         for donationOfTheArray in self.__donations:
             if donationOfTheArray.donated_animal.chip_number == donation.donated_animal.chip_number:
-                raise TypeError("This dog is already registered in the donations list")
+                raise DuplicatedInstanceError("This dog is already registered in the donations list")
 
         self.__donations.append(donation)
         self.save_to_file()
@@ -39,7 +41,7 @@ class DonationRegisterRepository:
     def read_donation(self, cpf: str) -> Optional[DonationRegister]:
         self.__load_data()
         if not isinstance(cpf, str):
-            raise TypeError("CPF must be a string")
+            raise ClientError("CPF must be a string")
 
         for donation in self.__donations:
             if donation.donor.cpf == cpf:
@@ -53,10 +55,10 @@ class DonationRegisterRepository:
     def update_donation(self, cpf: str, new_donation: DonationRegister) -> bool:
         self.__load_data()
         if not isinstance(cpf, str):
-            raise TypeError("CPF must be a string")
+            raise ClientError("CPF must be a string")
 
         if not isinstance(new_donation, DonationRegister):
-            raise TypeError("new_donation must be an instance of DonationRegister")
+            raise ClientError("new_donation must be an instance of DonationRegister")
 
         for i, donation in enumerate(self.__donations):
             if donation.donor.cpf == cpf:
@@ -68,7 +70,7 @@ class DonationRegisterRepository:
     def delete_donation(self, cpf: str) -> bool:
         self.__load_data()
         if not isinstance(cpf, str):
-            raise TypeError("CPF must be a string")
+            raise ClientError("CPF must be a string")
 
         for donation in self.__donations:
             if donation.donor.cpf == cpf:
@@ -82,10 +84,10 @@ class DonationRegisterRepository:
         period_end = date.today()
         
         if not isinstance(period_start, date):
-            raise TypeError("period_start must be an instance of date")
+            raise ClientError("period_start must be an instance of date")
 
         if not isinstance(period_end, date):
-            raise TypeError("period_end must be an instance of date")
+            raise ClientError("period_end must be an instance of date")
 
         donations_in_period = []
         for donation in self.__donations:

@@ -49,7 +49,7 @@ class PetController:
                 self.view.success_message(f"Animal com chip {chip_number} excluído com sucesso.")
             else:
                 self.view.error_message("Nenhum animal com o chip fornecido foi encontrado.")
-        except ValueError as e:
+        except Exception as e:
             self.view.error_message(str(e))
 
 
