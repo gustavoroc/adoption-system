@@ -7,7 +7,7 @@ from view.view_signature import IViewSignature
 
 import PySimpleGUI as sg
 
-class View():
+class View(IViewSignature):
     def start(self):
         # Criar layout
         layout = [
@@ -183,7 +183,7 @@ class View():
             [sg.Button('OK')]
         ]
 
-        window = sg.Window('Relatório de Animais', layout)
+        window = sg.Window('Relatório de Animais', layout, finalize=True)
 
         output_text = ''
         for animal in animals:
@@ -193,6 +193,7 @@ class View():
 
         event, values = window.read()
         window.close()
+
 
     def get_period(self) -> date:
         layout = [
@@ -208,7 +209,7 @@ class View():
         date_time = values['date']
         return date.fromisoformat(date_time)
  
-    def success_message(self, message: str) -> str:
+    def sucess_message(self, message: str) -> str:
         layout = [
             [sg.Text(f'Success: {message}')],
             [sg.Button('OK')]

@@ -1,3 +1,4 @@
+import pickle
 from datetime import date
 from typing import List, Optional
 from models.registers.adoption_register import AdoptionRegister
@@ -6,6 +7,17 @@ from models.registers.adoption_register import AdoptionRegister
 class AdoptionRegisterRepository:
     def __init__(self):
         self.__adoptions = []
+        self.__filename = "adoptions.pkl"
+
+        try:
+            with open(self.__filename, "rb") as f:
+                self.__adoptions = pickle.load(f)
+        except FileNotFoundError:
+            self.__adoptions = []
+
+    def save_to_file(self):
+        with open(self.__filename, "wb") as f:
+            pickle.dump(self.__adoptions, f)
 
     def create_adoption(self, adoption: AdoptionRegister) -> bool:
         if not isinstance(adoption, AdoptionRegister):
@@ -15,6 +27,7 @@ class AdoptionRegisterRepository:
             raise TypeError("adoption_date must be an instance of date")
 
         self.__adoptions.append(adoption)
+        self.save_to_file()
         return True
 
     def read_adoption(self, cpf: str) -> Optional[AdoptionRegister]:
@@ -39,6 +52,7 @@ class AdoptionRegisterRepository:
         for i, adoption in enumerate(self.__adoptions):
             if adoption.adopter.cpf == cpf:
                 self.__adoptions[i] = new_adoption
+                self.save_to_file()
                 return True
         return False
 
@@ -49,6 +63,7 @@ class AdoptionRegisterRepository:
         for adoption in self.__adoptions:
             if adoption.adopter.cpf == cpf:
                 self.__adoptions.remove(adoption)
+                self.save_to_file()
                 return True
         return False
 
@@ -66,4 +81,3 @@ class AdoptionRegisterRepository:
             if period_start <= adoption.adoption_date <= period_end:
                 adoptions_in_period.append(adoption)
         return adoptions_in_period
-    

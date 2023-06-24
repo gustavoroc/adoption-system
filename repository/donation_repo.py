@@ -1,11 +1,20 @@
+import pickle
 from datetime import date
 from typing import List, Optional
 from models.registers.donation_register import DonationRegister
 
-
 class DonationRegisterRepository:
     def __init__(self):
-        self.__donations: List[DonationRegister] = []
+        self.__filename = "donations.pkl"
+        try:
+            with open(self.__filename, "rb") as f:
+                self.__donations: List[DonationRegister] = pickle.load(f)
+        except FileNotFoundError:
+            self.__donations: List[DonationRegister] = []
+
+    def save_to_file(self):
+        with open(self.__filename, "wb") as f:
+            pickle.dump(self.__donations, f)
 
     def create_donation(self, donation: DonationRegister) -> bool:
         if not isinstance(donation, DonationRegister):
@@ -20,6 +29,7 @@ class DonationRegisterRepository:
                 raise TypeError("This dog is already registered in the donations list")
 
         self.__donations.append(donation)
+        self.save_to_file()
         return True
 
     def read_donation(self, cpf: str) -> Optional[DonationRegister]:
@@ -44,6 +54,7 @@ class DonationRegisterRepository:
         for i, donation in enumerate(self.__donations):
             if donation.donor.cpf == cpf:
                 self.__donations[i] = new_donation
+                self.save_to_file()
                 return True
         return False
 
@@ -54,6 +65,7 @@ class DonationRegisterRepository:
         for donation in self.__donations:
             if donation.donor.cpf == cpf:
                 self.__donations.remove(donation)
+                self.save_to_file()
                 return True
         return False
 

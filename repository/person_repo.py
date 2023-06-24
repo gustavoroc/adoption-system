@@ -1,3 +1,4 @@
+import pickle
 from typing import List, Optional
 from models.person.adopter import Adopter
 from models.person.donor import Donor
@@ -5,7 +6,16 @@ from models.person.person import Person
 
 class PersonRepository:
     def __init__(self):
-        self.__people: List[Person] = []
+        self.__filename = "people.pkl"
+        try:
+            with open(self.__filename, "rb") as f:
+                self.__people: List[Person] = pickle.load(f)
+        except FileNotFoundError:
+            self.__people: List[Person] = []
+
+    def save_to_file(self):
+        with open(self.__filename, "wb") as f:
+            pickle.dump(self.__people, f)
 
     def create_person(self, person: Person) -> None:
         if not isinstance(person, Person):
@@ -14,6 +24,7 @@ class PersonRepository:
             if existing_person.cpf == person.cpf:
                 raise ValueError("A person with the same CPF already exists.")
         self.__people.append(person)
+        self.save_to_file()
 
     def get_all_people(self) -> List[Person]:
         return self.__people
@@ -32,6 +43,7 @@ class PersonRepository:
         for i, person in enumerate(self.__people):
             if person.cpf == cpf:
                 self.__people[i] = new_person
+                self.save_to_file()
                 return new_person
         raise ValueError("No person with the provided CPF exists.")
 
@@ -41,6 +53,7 @@ class PersonRepository:
         for i, person in enumerate(self.__people):
             if person.cpf == cpf:
                 del self.__people[i]
+                self.save_to_file()
                 return True
         raise ValueError("No person with the provided CPF exists.")
     
